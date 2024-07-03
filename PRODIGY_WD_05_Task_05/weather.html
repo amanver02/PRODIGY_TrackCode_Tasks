@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        .container {
+            width: 20%;
+            border: 2px solid orange;
+            margin: 0 auto;
+            text-align: center;
+            padding: 13px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 100px;
+            text-transform: capitalize;
+            border-radius: 20px;
+        }
+
+        .p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .inp input {
+            width: 80%;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .box2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <div class="inp">
+            <form action="" id="form">
+                <input type="text" name="" id="search" placeholder="Check city..." autocomplete="off">
+            </form>
+        </div>
+        <div class="p">
+            <div class="img">
+                <img src="https://cdn2.iconfinder.com/data/icons/weather-flat-14/64/weather02-512.png" alt="weather" height="40px" width="40px" id="img">
+            </div>
+            <h1 id="degree">32°C</h1>
+        </div>
+        <div class="box2">
+            <p id="cloud">Clear</p>
+            <p id="city">City</p>
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById('form');
+        const search = document.getElementById('search');
+        const degree = document.getElementById('degree');
+        const cloud = document.getElementById('cloud');
+        const city = document.getElementById('city');
+        const img = document.getElementById('img');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const city = search.value;
+            if (city) {
+                getWeather(city);
+                search.value = '';
+            }
+        });
+
+        async function getWeather(city) {
+            const apiKey = 'e2e037dece162079b4d91de00aefb40e';
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.cod === 200) {
+                updateWeather(data);
+            } else {
+                alert('City not found');
+            }
+        }
+
+        function updateWeather(data) {
+            degree.textContent = `${data.main.temp}°C`;
+            cloud.textContent = data.weather[0].main;
+            city.textContent = data.name;
+            const icon = data.weather[0].icon;
+            img.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+        }
+    </script>
+</body>
+</html>
